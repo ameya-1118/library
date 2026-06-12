@@ -37,13 +37,9 @@ const AuthorsList = () => {
 
     try {
       setDeletingId(authorToDelete._id);
-      setError(null);
-      setSuccess("");
       await authorApi.delete(authorToDelete._id);
-      setAuthors((currentAuthors) =>
-        currentAuthors.filter((author) => author._id !== authorToDelete._id),
-      );
-      setSuccess("Author deleted successfully.");
+      setAuthors((prev) => prev.filter((a) => a._id !== authorToDelete._id));
+      setSuccess("Author deleted successfully");
       setAuthorToDelete(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete author");
@@ -53,100 +49,90 @@ const AuthorsList = () => {
   };
 
   return (
-    <section className="content-wrap">
-      <div className="panel p-6 sm:p-8">
-        <h1 className="page-title">Authors</h1>
-        <p className="page-subtitle">
-          Explore writer profiles and the minds behind every title.
-        </p>
+    <section className="page-shell">
+      <header className="hero-panel">
+        <span className="eyebrow">Author Profiles</span>
+        <h1 className="page-title mt-5">Discover and manage author records</h1>
+        <p className="page-subtitle">Explore biographies, birth details, and maintain your writer directory.</p>
+      </header>
 
-        <div className="mt-5">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search authors"
-            className="field-input"
-          />
+      <div className="search-card">
+        <div className="search-layout">
+          <div>
+            <p className="section-title text-[1.35rem]">Find authors</p>
+            <p className="data-muted mt-1">Search by first or last name.</p>
+          </div>
+          <div className="w-full max-w-lg">
+            <label htmlFor="author-search" className="field-label">
+              Search
+            </label>
+            <input
+              id="author-search"
+              type="text"
+              placeholder="Search authors"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="field-input"
+            />
+          </div>
         </div>
       </div>
 
-      {loading && (
-        <div className="panel mt-6 p-6 text-sm text-slate-600">
-          Loading authors...
+      {loading && <div className="panel p-5 text-sm text-slate-600">Loading authors...</div>}
+      {error && <div className="status-error">{error}</div>}
+      {success && <div className="status-success">{success}</div>}
+
+      {!loading && authors.length === 0 ? (
+        <div className="panel p-8 text-center">
+          <p className="section-title text-[1.35rem]">No authors found</p>
+          <p className="data-muted mt-2">Try another name or create a new author profile.</p>
         </div>
-      )}
-      {error && <div className="status-error mt-6">{error}</div>}
-      {success && <div className="status-success mt-6">{success}</div>}
+      ) : (
+        <div className="catalog-grid">
+          {authors.map((author) => {
+            const initials = `${author.firstname?.[0] || "?"}${author.lastname?.[0] || "?"}`;
 
-      {!loading && !error && authors.length === 0 && (
-        <div className="panel mt-6 p-6 text-sm text-slate-600">
-          No authors found.
-        </div>
-      )}
+            return (
+              <article key={author._id} className="catalog-card p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold uppercase tracking-[0.2em] text-white">
+                    {initials}
+                  </div>
+                  {isAdmin && (
+                    <button
+                      onClick={() => setAuthorToDelete(author)}
+                      className="rounded-lg border border-rose-200 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-50"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
 
-      {!loading && !error && authors.length > 0 && (
-        <div className="catalog-grid mt-6">
-          {authors.map((author) => (
-            <article key={author._id} className="catalog-card stagger-item">
-              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-lg font-bold text-emerald-700">
-                {author.firstname?.[0]}
-                {author.lastname?.[0]}
-              </div>
-
-              <h3 className="text-lg font-bold text-slate-800">
-                {author.firstname} {author.lastname}
-              </h3>
-              <p className="mt-2 line-clamp-3 text-sm text-slate-600">
-                {author.bio || "No bio added yet."}
-              </p>
-              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Born{" "}
-                {author.birthDate
-                  ? new Date(author.birthDate).toLocaleDateString()
-                  : "N/A"}
-              </p>
-              {isAdmin && (
-                <button
-                  type="button"
-                  onClick={() => setAuthorToDelete(author)}
-                  disabled={deletingId === author._id}
-                  className="mt-4 rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {deletingId === author._id ? "Deleting..." : "Delete Author"}
-                </button>
-              )}
-            </article>
-          ))}
+                <h2 className="mt-4 text-xl font-bold text-slate-900">
+                  {author.firstname} {author.lastname}
+                </h2>
+                <p className="data-muted mt-2 line-clamp-3">{author.bio || "No bio available."}</p>
+                <p className="data-muted mt-3">
+                  Birth Date: {author.birthDate ? new Date(author.birthDate).toLocaleDateString() : "N/A"}
+                </p>
+              </article>
+            );
+          })}
         </div>
       )}
 
       {authorToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4">
-          <div className="panel w-full max-w-md p-6">
-            <h2 className="text-xl font-bold text-gray-900">Delete author?</h2>
-            <p className="mt-3 text-sm text-slate-600">
-              Are you sure you want to delete{" "}
-              <span className="font-semibold">
-                {authorToDelete.firstname} {authorToDelete.lastname}
-              </span>
-              ?
+        <div className="modal-backdrop">
+          <div className="modal-card">
+            <h2 className="section-title text-[1.35rem]">Delete author</h2>
+            <p className="data-muted mt-2">
+              Are you sure you want to delete {authorToDelete.firstname} {authorToDelete.lastname}?
             </p>
             <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setAuthorToDelete(null)}
-                disabled={deletingId === authorToDelete._id}
-                className="btn-outline"
-              >
+              <button onClick={() => setAuthorToDelete(null)} className="btn-secondary !px-4 !py-2">
                 Cancel
               </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={deletingId === authorToDelete._id}
-                className="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
+              <button onClick={handleDelete} className="btn-danger !px-4 !py-2" disabled={deletingId === authorToDelete._id}>
                 {deletingId === authorToDelete._id ? "Deleting..." : "Delete"}
               </button>
             </div>

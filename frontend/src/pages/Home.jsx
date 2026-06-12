@@ -1,57 +1,33 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-6xl font-bold mb-4">Library Management</h1>
-        <p className="text-2xl mb-8">
-          Organize, Search, and Manage Your Books and Authors
-        </p>
+    <section className="page-shell">
+      <header className="hero-panel">
+        <span className="eyebrow">Library Platform</span>
+        <h1 className="page-title mt-5">A modern layout for your digital library</h1>
+        <p className="page-subtitle">Browse books, discover authors, and keep your workspace organized with a clean and focused interface.</p>
+      </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <div className="bg-white bg-opacity-20 p-6 rounded-lg backdrop-blur">
-            <h3 className="text-2xl font-bold mb-2"> Books</h3>
-            <p>
-              Explore thousands of books with beautiful covers and detailed
-              information
-            </p>
-            <a
-              href="/books"
-              className="mt-4 inline-block bg-white text-blue-600 px-6 py-2 rounded font-semibold hover:bg-gray-100"
-            >
-              Browse Books
-            </a>
-          </div>
+      <div className="feature-grid">
+        <article className="feature-card">
+          <h2 className="section-title text-[1.35rem]">Books</h2>
+          <p className="data-muted mt-2">Explore the catalog with quick search and visual previews.</p>
+          <Link to="/books" className="btn-primary mt-6">
+            Browse Books
+          </Link>
+        </article>
 
-          <div className="bg-white bg-opacity-20 p-6 rounded-lg backdrop-blur">
-            <h3 className="text-2xl font-bold mb-2">Authors</h3>
-            <p>
-              Discover information about your favorite authors and their works
-            </p>
-            <a
-              href="/authors"
-              className="mt-4 inline-block bg-white text-blue-600 px-6 py-2 rounded font-semibold hover:bg-gray-100"
-            >
-              Explore Authors
-            </a>
-          </div>
-
-          <div className="bg-white bg-opacity-20 p-6 rounded-lg backdrop-blur">
-            <h3 className="text-2xl font-bold mb-2">Secure</h3>
-            <p>
-              Create an account and manage your library with complete security
-            </p>
-            <a
-              href="/register"
-              className="mt-4 inline-block bg-white text-blue-600 px-6 py-2 rounded font-semibold hover:bg-gray-100"
-            >
-              Get Started
-            </a>
-          </div>
-        </div>
+        <article className="feature-card">
+          <h2 className="section-title text-[1.35rem]">Authors</h2>
+          <p className="data-muted mt-2">Read biographies and maintain a complete writer directory.</p>
+          <Link to="/authors" className="btn-primary mt-6">
+            Explore Authors
+          </Link>
+        </article>
       </div>
-    </div>
+    </section>
   );
 };
 

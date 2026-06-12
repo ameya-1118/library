@@ -1,13 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+const dashboardStats = [
+  { title: "Books", value: "1200+", note: "Cataloged titles" },
+  { title: "Authors", value: "350+", note: "Writer profiles" },
+  { title: "Members", value: "2.5k", note: "Active readers" },
+  { title: "Genres", value: "25", note: "Curated categories" },
+];
+
 const Dashboard = ({ user }) => {
   if (!user) {
     return (
       <section className="content-wrap">
-        <div className="panel p-10 text-center">
-          <h1 className="page-title">Loading Dashboard</h1>
-          <p className="page-subtitle">Fetching your personalized library experience.</p>
+        <div className="panel p-8 text-center">
+          <h1 className="section-title">Loading dashboard...</h1>
+          <p className="data-muted mt-2">Preparing your workspace.</p>
         </div>
       </section>
     );
@@ -16,66 +23,72 @@ const Dashboard = ({ user }) => {
   const isAdmin = user.role === "admin";
 
   return (
-    <section className="content-wrap">
-      <div className="panel surface-noise p-6 sm:p-8">
-        <span className="pill">{isAdmin ? "Admin Workspace" : "Reader Space"}</span>
-        <h1 className="page-title mt-4">
-          <span className="hero-accent">{isAdmin ? "Control Center" : "Your Library Hub"}</span>
+    <section className="page-shell">
+      <header className="hero-panel">
+        <span className={isAdmin ? "warm-badge" : "badge"}>{isAdmin ? "Admin Workspace" : "Reader Workspace"}</span>
+        <h1 className="page-title mt-5">
+          {isAdmin ? "Run your catalog command center" : "Explore your personalized library"}
         </h1>
-        <p className="page-subtitle max-w-2xl">
+        <p className="page-subtitle">
           {isAdmin
-            ? "Manage catalog quality, add new books, and keep author records up to date from one place."
-            : "Browse curated titles, discover authors, and keep your reading journey active."}
+            ? "Create books, manage author records, and keep your library data updated from one place."
+            : "Browse titles, discover new authors, and keep your reading world in one clean dashboard."}
         </p>
-      </div>
+      </header>
 
-      <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
-        <div className="catalog-card stagger-item">
-          <h2 className="text-xl font-bold text-slate-800">Browse Books</h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Search titles, preview cover images, and explore your growing catalog.
-          </p>
-          <Link to="/books" className="btn-primary mt-5 inline-flex">
-            Open Books
-          </Link>
-        </div>
+      <section className="stats-grid">
+        {dashboardStats.map((stat) => (
+          <article key={stat.title} className="stat-card">
+            <p className="data-muted uppercase tracking-[0.15em]">{stat.title}</p>
+            <p className="mt-2 text-3xl font-bold text-slate-900">{stat.value}</p>
+            <p className="data-muted mt-1">{stat.note}</p>
+          </article>
+        ))}
+      </section>
 
-        <div className="catalog-card stagger-item">
-          <h2 className="text-xl font-bold text-slate-800">Explore Authors</h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Discover biographies and navigate authors behind your favorite books.
-          </p>
-          <Link to="/authors" className="btn-primary mt-5 inline-flex">
-            Open Authors
-          </Link>
-        </div>
+      <section className="feature-grid">
+        <DashboardCard
+          title="Browse Books"
+          desc="Search book titles and quickly preview publishing details."
+          link="/books"
+          action="Open Books"
+        />
+        <DashboardCard
+          title="Explore Authors"
+          desc="Read author biographies and discover writer histories."
+          link="/authors"
+          action="Open Authors"
+        />
 
         {isAdmin && (
           <>
-            <div className="catalog-card stagger-item">
-              <h2 className="text-xl font-bold text-slate-800">Add New Book</h2>
-              <p className="mt-2 text-sm text-slate-600">
-                Publish new titles quickly with cover image and release date details.
-              </p>
-              <Link to="/add-book" className="btn-outline mt-5 inline-flex">
-                Add Book
-              </Link>
-            </div>
-
-            <div className="catalog-card stagger-item">
-              <h2 className="text-xl font-bold text-slate-800">Add New Author</h2>
-              <p className="mt-2 text-sm text-slate-600">
-                Create and maintain author profiles with clear metadata.
-              </p>
-              <Link to="/add-author" className="btn-outline mt-5 inline-flex">
-                Add Author
-              </Link>
-            </div>
+            <DashboardCard
+              title="Add New Book"
+              desc="Publish fresh entries with image cover and metadata."
+              link="/add-book"
+              action="Add Book"
+            />
+            <DashboardCard
+              title="Add New Author"
+              desc="Create complete author profiles for the catalog."
+              link="/add-author"
+              action="Add Author"
+            />
           </>
         )}
-      </div>
+      </section>
     </section>
   );
 };
+
+const DashboardCard = ({ title, desc, link, action }) => (
+  <article className="feature-card">
+    <h2 className="section-title text-[1.35rem]">{title}</h2>
+    <p className="data-muted mt-2">{desc}</p>
+    <Link to={link} className="btn-primary mt-6">
+      {action}
+    </Link>
+  </article>
+);
 
 export default Dashboard;

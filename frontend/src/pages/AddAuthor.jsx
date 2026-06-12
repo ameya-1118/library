@@ -35,19 +35,25 @@ const AddAuthor = () => {
   };
 
   return (
-    <section className="content-wrap">
-      <div className="panel p-6 sm:p-8">
-        <h1 className="page-title">Add New Author</h1>
-        <p className="page-subtitle">Build rich author profiles for your library database.</p>
+    <section className="page-shell">
+      <header className="hero-panel">
+        <span className="eyebrow">Admin Task</span>
+        <h1 className="page-title mt-5">Create a new author profile</h1>
+        <p className="page-subtitle">Capture core identity, biography, and birth details for the directory.</p>
+      </header>
 
-        {success && <div className="status-success mt-5">Author created successfully.</div>}
-        {error && <div className="status-error mt-5">{error}</div>}
+      <div className="panel p-6 sm:p-8">
+        {success && <div className="status-success">Author created successfully.</div>}
+        {error && <div className="status-error">{error}</div>}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="field-label">First Name</label>
+              <label className="field-label" htmlFor="author-first-name">
+                First Name
+              </label>
               <input
+                id="author-first-name"
                 type="text"
                 name="firstname"
                 value={formData.firstname}
@@ -58,8 +64,11 @@ const AddAuthor = () => {
             </div>
 
             <div>
-              <label className="field-label">Last Name</label>
+              <label className="field-label" htmlFor="author-last-name">
+                Last Name
+              </label>
               <input
+                id="author-last-name"
                 type="text"
                 name="lastname"
                 value={formData.lastname}
@@ -71,19 +80,25 @@ const AddAuthor = () => {
           </div>
 
           <div>
-            <label className="field-label">Bio</label>
+            <label className="field-label" htmlFor="author-bio">
+              Biography
+            </label>
             <textarea
+              id="author-bio"
               name="bio"
               value={formData.bio}
               onChange={handleChange}
-              className="field-input min-h-28"
-              placeholder="Short author biography"
+              className="field-input min-h-32"
+              placeholder="Write a short author biography"
             />
           </div>
 
           <div>
-            <label className="field-label">Birth Date</label>
+            <label className="field-label" htmlFor="author-birth-date">
+              Birth Date
+            </label>
             <input
+              id="author-birth-date"
               type="date"
               name="birthDate"
               value={formData.birthDate}
@@ -93,7 +108,7 @@ const AddAuthor = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading} className="btn-primary w-full">
+          <button type="submit" disabled={loading} className="btn-primary w-full sm:w-auto">
             {loading ? "Creating..." : "Create Author"}
           </button>
         </form>

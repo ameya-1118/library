@@ -46,6 +46,7 @@ const AddBook = () => {
       data.append("title", formData.title);
       data.append("authorID", formData.authorID);
       data.append("publishedDate", formData.publishedDate);
+
       if (file) {
         data.append("coverImage", file);
       }
@@ -62,18 +63,24 @@ const AddBook = () => {
   };
 
   return (
-    <section className="content-wrap">
-      <div className="panel p-6 sm:p-8">
-        <h1 className="page-title">Add New Book</h1>
-        <p className="page-subtitle">Create a polished catalog entry for your readers.</p>
+    <section className="page-shell">
+      <header className="hero-panel">
+        <span className="eyebrow">Admin Task</span>
+        <h1 className="page-title mt-5">Create a new book entry</h1>
+        <p className="page-subtitle">Add title, author, publish date, and optional cover image.</p>
+      </header>
 
-        {success && <div className="status-success mt-5">Book created successfully.</div>}
-        {error && <div className="status-error mt-5">{error}</div>}
+      <div className="panel p-6 sm:p-8">
+        {success && <div className="status-success">Book created successfully.</div>}
+        {error && <div className="status-error">{error}</div>}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
-            <label className="field-label">Title</label>
+            <label className="field-label" htmlFor="book-title">
+              Title
+            </label>
             <input
+              id="book-title"
               type="text"
               name="title"
               value={formData.title}
@@ -84,8 +91,11 @@ const AddBook = () => {
           </div>
 
           <div>
-            <label className="field-label">Author</label>
+            <label className="field-label" htmlFor="book-author">
+              Author
+            </label>
             <select
+              id="book-author"
               name="authorID"
               value={formData.authorID}
               onChange={handleChange}
@@ -101,23 +111,36 @@ const AddBook = () => {
             </select>
           </div>
 
-          <div>
-            <label className="field-label">Published Date</label>
-            <input
-              type="date"
-              name="publishedDate"
-              value={formData.publishedDate}
-              onChange={handleChange}
-              className="field-input"
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="field-label" htmlFor="book-published-date">
+                Published Date
+              </label>
+              <input
+                id="book-published-date"
+                type="date"
+                name="publishedDate"
+                value={formData.publishedDate}
+                onChange={handleChange}
+                className="field-input"
+              />
+            </div>
+
+            <div>
+              <label className="field-label" htmlFor="book-cover-image">
+                Cover Image
+              </label>
+              <input
+                id="book-cover-image"
+                type="file"
+                onChange={handleFileChange}
+                accept="image/*"
+                className="field-input"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="field-label">Cover Image</label>
-            <input type="file" onChange={handleFileChange} accept="image/*" className="field-input" />
-          </div>
-
-          <button type="submit" disabled={loading} className="btn-primary w-full">
+          <button type="submit" disabled={loading} className="btn-primary w-full sm:w-auto">
             {loading ? "Creating..." : "Create Book"}
           </button>
         </form>
