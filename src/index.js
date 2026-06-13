@@ -8,11 +8,13 @@ import authorRouter from "./router/author.router.js";
 import { seedLibraryData } from "./seed/library.seed.js";
 
 const app = express();
+
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "https://library-frontend-qkmr.onrender.com",
 ];
 
 app.use(
@@ -25,18 +27,19 @@ app.use(
       }
     },
     credentials: true,
-  }),
+  })
 );
+
 app.use(express.json());
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 const db = process.env.DB_CONNECTION;
 const dbName = process.env.DB_NAME || "atlast";
 
 mongoose
   .connect(db, { dbName })
   .then(async () => {
-    console.log(`database is connected to the server (${dbName})`);
+    console.log(`Database connected (${dbName})`);
     await seedLibraryData();
   })
   .catch((err) => {
@@ -47,6 +50,10 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/author", authorRouter);
 
+app.get("/", (req, res) => {
+  res.send("Library API is running");
+});
+
 app.listen(port, () => {
-  console.log(`server is running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
